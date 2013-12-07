@@ -28,13 +28,16 @@ var noop = function(){};
 /**
  * Base formatter.
  *
- * @param {Stream} out stream
  * @constructor
  */
 
-function Formatter(out) {
-  this.out = out || process.stdout;
+function Formatter() {
+  this.out = process.stdout;
   this.padding = new Array(4).join(' ');
+  this.tests = [];
+  this.failed = [];
+  this.skipped = [];
+  this.passed = [];
 }
 
 /**
@@ -48,23 +51,31 @@ Formatter.extend = extend;
 /**
  * Setup.
  *
- * @param {Object} events
+ * @param {Hydro} hydro
  * @api public
  */
 
-Formatter.prototype.setup = function(events) {
-  events.on('pre:all', this.beforeAll.bind(this));
-  events.on('pre:suite', this.beforeSuite.bind(this));
-  events.on('pre:test', this.beforeTest.bind(this));
-  events.on('post:test', this.afterTest.bind(this));
-  events.on('post:suite', this.afterSuite.bind(this));
-  events.on('post:all', this.afterAll.bind(this));
+Formatter.prototype.use = function(hydro) {
+  var self = this;
+
+  hydro.on('post:test', function(test) {
+    self.tests.push(test);
+    if (test.skipped) return self.skipped.push(test);
+    if (test.failed) return self.failed.push(test);
+    self.passed.push(test);
+  });
+
+  hydro.on('pre:all', this.beforeAll.bind(this));
+  hydro.on('pre:suite', this.beforeSuite.bind(this));
+  hydro.on('pre:test', this.beforeTest.bind(this));
+  hydro.on('post:test', this.afterTest.bind(this));
+  hydro.on('post:suite', this.afterSuite.bind(this));
+  hydro.on('post:all', this.afterAll.bind(this));
 };
 
 /**
  * Before all tests.
  *
- * @param {Array} suites
  * @api public
  */
 
@@ -73,7 +84,6 @@ Formatter.prototype.beforeAll = noop;
 /**
  * Before test suite.
  *
- * @param {Suite} suite
  * @api public
  */
 
@@ -82,7 +92,6 @@ Formatter.prototype.beforeSuite = noop;
 /**
  * Before each tests.
  *
- * @param {Test} test
  * @api public
  */
 
@@ -155,14 +164,12 @@ Formatter.prototype.println = function(msg) {
 /**
  * Display failed tests.
  *
- * @param {Result} result
  * @api private
  */
 
-Formatter.prototype.displayFailed = function(result) {
-  result.failed.forEach(function(test, i) {
-    var signature = test.title + ' (' + test.file + ':' + test.line + ')';
-    this.println((i + 1) + '. ' + signature);
+Formatter.prototype.displayFailed = function() {
+  this.failed.forEach(function(test, i) {
+    this.println((i + 1) + '. ' + test.title);
     this.println(color('gray', test.error.stack));
     this.println();
   }, this);
@@ -171,19 +178,20 @@ Formatter.prototype.displayFailed = function(result) {
 /**
  * Display test results.
  *
- * @param {Result} result
  * @api private
  */
 
-Formatter.prototype.displayResult = function(result) {
-  var total = result.tests.length;
-  var failures = result.failed.length;
-  var skipped = result.skipped.length;
+Formatter.prototype.displayResult = function() {
+  var failures = this.failed.length;
+  var skipped = this.skipped.length;
+  var total = this.tests.length;
   var c = failures === 0 ? 'green' : 'red';
-  var time = this.ms(result.time, { long: true });
+  var time = this.tests.reduce(function(sum, test) {
+    return sum + test.time;
+  }, 0);
 
   this.println();
-  this.println('Finished in ' + time);
+  this.println('Finished in ' + this.ms(time));
   this.println(color(c, total + ' tests, ' + failures + ' failures, ' + skipped + ' skipped'));
   this.println();
 };
