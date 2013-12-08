@@ -1,4 +1,9 @@
 
+2.0.0 / 2013-12-08
+==================
+
+  * Use external color library, API breaking change
+
 1.0.1 / 2013-12-07
 ==================
 
