@@ -12,12 +12,7 @@ var extname = path.extname;
 
 var extend = require('super').extend;
 var ms = require('ms');
-
-/**
- * Internal dependencies.
- */
-
-var color = require('./color');
+var color = require('eyehurt');
 
 /**
  * Noop.
@@ -100,7 +95,6 @@ Formatter.prototype.beforeTest = noop;
 /**
  * After test.
  *
- * @param {Test} test
  * @api public
  */
 
@@ -109,7 +103,6 @@ Formatter.prototype.afterTest = noop;
 /**
  * After test suite.
  *
- * @param {Result} result
  * @api public
  */
 
@@ -118,7 +111,6 @@ Formatter.prototype.afterSuite = noop;
 /**
  * After all tests.
  *
- * @param {Result} result
  * @api public
  */
 
@@ -170,7 +162,7 @@ Formatter.prototype.println = function(msg) {
 Formatter.prototype.displayFailed = function() {
   this.failed.forEach(function(test, i) {
     this.println((i + 1) + '. ' + test.title);
-    this.println(color('gray', test.error.stack));
+    this.println(color(test.error.stack, 'gray'));
     this.println();
   }, this);
 };
@@ -192,7 +184,7 @@ Formatter.prototype.displayResult = function() {
 
   this.println();
   this.println('Finished in ' + this.ms(time));
-  this.println(color(c, total + ' tests, ' + failures + ' failures, ' + skipped + ' skipped'));
+  this.println(color(total + ' tests, ' + failures + ' failures, ' + skipped + ' skipped', c));
   this.println();
 };
 
