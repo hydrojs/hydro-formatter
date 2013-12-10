@@ -33,6 +33,7 @@ function Formatter() {
   this.failed = [];
   this.skipped = [];
   this.passed = [];
+  this.colors = null;
 }
 
 /**
@@ -52,6 +53,8 @@ Formatter.extend = extend;
 
 Formatter.prototype.use = function(hydro) {
   var self = this;
+
+  this.colors = !(hydro.get('colors') === false);
 
   hydro.on('post:test', function(test) {
     self.tests.push(test);
@@ -126,7 +129,20 @@ Formatter.prototype.ms = ms;
  * Attach `color` for inheriting formatters.
  */
 
-Formatter.prototype.color = color;
+Formatter.prototype.color = function(str, col, options) {
+  if (Object(col) === col) {
+    options = col;
+    col = '';
+  }
+
+  options = options || {};
+
+  if (this.colors === false) {
+    options.enable = this.colors;
+  }
+
+  return color(str, col, options);
+};
 
 /**
  * Print `msg`.
@@ -162,7 +178,7 @@ Formatter.prototype.println = function(msg) {
 Formatter.prototype.displayFailed = function() {
   this.failed.forEach(function(test, i) {
     this.println((i + 1) + '. ' + test.title);
-    this.println(color(test.error.stack, 'gray'));
+    this.println(this.color(test.error.stack, 'gray'));
     this.println();
   }, this);
 };
@@ -184,7 +200,7 @@ Formatter.prototype.displayResult = function() {
 
   this.println();
   this.println('Finished in ' + this.ms(time));
-  this.println(color(total + ' tests, ' + failures + ' failures, ' + skipped + ' skipped', c));
+  this.println(this.color(total + ' tests, ' + failures + ' failures, ' + skipped + ' skipped', c));
   this.println();
 };
 
