@@ -30,9 +30,10 @@ function Formatter() {
   this.out = process.stdout;
   this.padding = new Array(4).join(' ');
   this.tests = [];
-  this.failed = [];
-  this.skipped = [];
   this.passed = [];
+  this.failed = [];
+  this.pending = [];
+  this.skipped = [];
   this.colors = null;
 }
 
@@ -58,9 +59,7 @@ Formatter.prototype.use = function(hydro) {
 
   hydro.on('post:test', function(test) {
     self.tests.push(test);
-    if (test.skipped) return self.skipped.push(test);
-    if (test.failed) return self.failed.push(test);
-    self.passed.push(test);
+    self[test.status].push(test);
   });
 
   hydro.on('pre:all', this.beforeAll.bind(this));
