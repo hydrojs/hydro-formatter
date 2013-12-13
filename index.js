@@ -38,6 +38,7 @@ function Formatter() {
   this.statusColor = {
     failed: 'red',
     passed: 'green',
+    skipped: 'gray',
     pending: 'yellow'
   };
 }
