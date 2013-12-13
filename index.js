@@ -35,6 +35,11 @@ function Formatter() {
   this.pending = [];
   this.skipped = [];
   this.colors = null;
+  this.statusColor = {
+    failed: 'red',
+    passed: 'green',
+    pending: 'yellow'
+  };
 }
 
 /**
@@ -192,14 +197,18 @@ Formatter.prototype.displayResult = function() {
   var failures = this.failed.length;
   var skipped = this.skipped.length;
   var total = this.tests.length;
-  var c = failures === 0 ? 'green' : 'red';
-  var time = this.tests.reduce(function(sum, test) {
-    return sum + test.time;
-  }, 0);
+  var pending = this.pending.length;
+  var c = null;
+  var time = this.tests.reduce(function(sum, test) { return sum + test.time; }, 0);
+  var out = total + ' tests, ' + failures + ' failures, ' + pending + ' pending, ' + skipped + ' skipped';
+
+  if (failures > 0) c = 'red';
+  else if (pending > 0) c = 'yellow';
+  else c = 'green';
 
   this.println();
   this.println('Finished in ' + this.ms(time));
-  this.println(this.color(total + ' tests, ' + failures + ' failures, ' + skipped + ' skipped', c));
+  this.println(this.color(out, c));
   this.println();
 };
 
