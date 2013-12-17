@@ -182,8 +182,9 @@ Formatter.prototype.println = function(msg) {
 
 Formatter.prototype.displayFailed = function() {
   this.failed.forEach(function(test, i) {
+    var stack = test.error.stack || test.error.message;
     this.println((i + 1) + '. ' + test.title);
-    this.println(this.color(test.error.stack, 'gray'));
+    this.println(this.color(stack, 'gray'));
     this.println();
   }, this);
 };
