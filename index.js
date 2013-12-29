@@ -211,7 +211,7 @@ Formatter.prototype.displayResult = function() {
     + this.color(pending ? pending + ' pending ' : '', 'yellow')
     + this.color(skipped ? skipped + ' skipped ' : '', 'blue')
     + this.color(failing ? failing + ' failing ' : '', 'red')
-    + '\033[90m(' + this.ms(time) + ')'); // grey
+    + this.color('(' + this.ms(time) + ')', 'gray'));
   this.println();
 };
 
