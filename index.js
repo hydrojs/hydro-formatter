@@ -197,21 +197,21 @@ Formatter.prototype.displayFailed = function() {
  */
 
 Formatter.prototype.displayResult = function() {
-  var failures = this.failed.length;
+  var failing = this.failed.length;
   var skipped = this.skipped.length;
-  var total = this.tests.length;
   var pending = this.pending.length;
-  var c = null;
-  var time = this.tests.reduce(function(sum, test) { return sum + test.time; }, 0);
-  var out = total + ' tests, ' + failures + ' failures, ' + pending + ' pending, ' + skipped + ' skipped';
-
-  if (failures > 0) c = 'red';
-  else if (pending > 0) c = 'yellow';
-  else c = 'green';
+  var passing = this.tests.length - skipped - failing - pending;
+  var time = this.tests.reduce(function(sum, test) {
+    return sum + test.time;
+  }, 0);
 
   this.println();
-  this.println('Finished in ' + this.ms(time));
-  this.println(this.color(out, c));
+  this.println(''
+    + this.color(passing ? passing + ' passing ' : '', 'green')
+    + this.color(pending ? pending + ' pending ' : '', 'yellow')
+    + this.color(skipped ? skipped + ' skipped ' : '', 'blue')
+    + this.color(failing ? failing + ' failing ' : '', 'red')
+    + '\033[90m(' + this.ms(time) + ')'); // grey
   this.println();
 };
 
