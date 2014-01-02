@@ -206,12 +206,19 @@ Formatter.prototype.displayResult = function() {
   }, 0);
 
   this.println();
-  this.println(''
-    + this.color(passing ? passing + ' passing ' : '', 'green')
-    + this.color(pending ? pending + ' pending ' : '', 'yellow')
-    + this.color(skipped ? skipped + ' skipped ' : '', 'blue')
-    + this.color(failing ? failing + ' failing ' : '', 'red')
-    + this.color('(' + this.ms(time) + ')', 'gray'));
+
+  if (this.tests.length === 0) {
+    this.println('0 tests ' + this.color('(' + this.ms(0) + ')', 'gray'));
+  } else {
+    this.println(''
+      + this.color(passing ? passing + ' passing ' : '', 'green')
+      + this.color(pending ? pending + ' pending ' : '', 'yellow')
+      + this.color(skipped ? skipped + ' skipped ' : '', 'blue')
+      + this.color(failing ? failing + ' failing ' : '', 'red')
+      + this.color('(' + this.ms(time) + ')', 'gray')
+    );
+  }
+
   this.println();
 };
 
