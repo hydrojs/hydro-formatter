@@ -1,6 +1,6 @@
 {
   "name": "hydro-formatter",
-  "version": "2.2.5",
+  "version": "2.2.6",
   "description": "Base formatter for hydro",
   "main": "index.js",
   "homepage": "https://github.com/hydrojs/hydro-formatter",

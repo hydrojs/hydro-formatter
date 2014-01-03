@@ -1,5 +1,10 @@
 
-2.2.5 / 2013-12-29 
+2.2.6 / 2014-01-03
+==================
+
+  * Show 0 tests when there are no tests at all
+
+2.2.5 / 2013-12-29
 ==================
 
   * minimize `displayResult()` output
