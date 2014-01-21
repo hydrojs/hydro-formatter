@@ -189,7 +189,12 @@ Formatter.prototype.displayFailed = function() {
 
     this.println((i + 1) + ') ' + test.title);
     this.println();
-    this.println(this.color('   Failure/Error: ' + err.message, 'red'));
+
+    var type = err.constructor.name;
+    if (type === 'AssertionError') type = '';
+    else type += ': ';
+
+    this.println('   ' + this.color(type + err.message, 'red'));
 
     if (err.actual) {
       this.println();
