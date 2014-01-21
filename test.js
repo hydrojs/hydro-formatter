@@ -11,7 +11,7 @@ var all = new Formatter;
 var chaiErr = null;
 var assertErr = null;
 var errnoStack = new Error('look ma, no stack');
-errnoStack.stack = null;
+errnoStack.showStack = false;
 
 try {
   chai.expect({ foo: 'bar' }).to.eq(['1', 'b']);
@@ -40,6 +40,12 @@ all.tests = [ {time: 1 }]
   .concat(all.failed);
 
 all.displayResult();
+all.displayFailed();
+
+all.hydro = { get: function(){return false} }
+
+// should hide stack
+
 all.displayFailed();
 
 // passing tests

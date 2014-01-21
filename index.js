@@ -57,6 +57,7 @@ Formatter.extend = extend;
 Formatter.prototype.use = function(hydro) {
   var self = this;
 
+  this.hydro = hydro;
   this.colors = !(hydro.get('colors') === false);
 
   hydro.on('post:test', function(test) {
@@ -202,7 +203,10 @@ Formatter.prototype.displayFailed = function() {
       this.println(this.color('        got: ' + inspect(err.actual), 'red'));
     }
 
-    this.printStack(err.stack);
+    if (err.showStack !== false
+    && (!this.hydro || this.hydro.get('showStack') !== false)) {
+      this.printStack(err.stack);
+    }
 
     if (i !== this.failed.length - 1) {
       this.println();
