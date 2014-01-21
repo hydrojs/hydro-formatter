@@ -1,18 +1,14 @@
 /**
- * Core dependencies.
- */
-
-var path = require('path');
-var basename = path.basename;
-var extname = path.extname;
-
-/**
  * External dependencies.
  */
 
+var path = require('path');
 var extend = require('super').extend;
 var ms = require('ms');
 var color = require('eyehurt');
+var inspect = require('loupe');
+var basename = path.basename;
+var extname = path.extname;
 
 /**
  * Noop.
@@ -61,6 +57,7 @@ Formatter.extend = extend;
 Formatter.prototype.use = function(hydro) {
   var self = this;
 
+  this.hydro = hydro;
   this.colors = !(hydro.get('colors') === false);
 
   hydro.on('post:test', function(test) {
@@ -181,12 +178,58 @@ Formatter.prototype.println = function(msg) {
  */
 
 Formatter.prototype.displayFailed = function() {
+  if (this.failed.length === 0) {
+    return;
+  }
+
   this.failed.forEach(function(test, i) {
-    var stack = test.error.stack || test.error.message;
-    this.println((i + 1) + '. ' + test.title);
+    var err = test.error;
+
+    this.println((i + 1) + ') ' + test.title);
     this.println();
-    this.println(this.color(stack, 'gray'));
-    this.println();
+
+    var type = err.constructor.name;
+    if (type === 'AssertionError') type = '';
+    else type += ': ';
+
+    this.println('   ' + this.color(type + err.message, 'red'));
+
+    if (err.actual) {
+      this.println();
+      this.println(this.color('   expected: ' + inspect(err.expected), 'red'));
+      this.println(this.color('        got: ' + inspect(err.actual), 'red'));
+    }
+
+    if (err.showStack !== false
+    && (!this.hydro || this.hydro.get('showStack') !== false)) {
+      this.printStack(err.stack);
+    }
+
+    if (i !== this.failed.length - 1) {
+      this.println();
+    }
+  }, this);
+};
+
+/**
+ * Format & print error stack.
+ *
+ * @param {String|null} error stack
+ * @api private
+ */
+
+Formatter.prototype.printStack = function(stack) {
+  var lines = (stack || '').split('\n');
+
+  if (!lines.length) {
+    return;
+  }
+
+  this.println();
+
+  lines.forEach(function(line, i) {
+    if (i === 0) return;
+    this.println(this.color('   ' + line.trim(), 'gray'));
   }, this);
 };
 

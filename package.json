@@ -11,8 +11,12 @@
   "dependencies": {
     "ms": "~0.6.1",
     "super": "~0.2.1",
-    "eyehurt": "0.0.1"
+    "eyehurt": "0.0.1",
+    "loupe": "0.0.1"
   },
   "author": "Veselin Todorov <hi@vesln.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "~1.8.1"
+  }
 }
