@@ -46,6 +46,7 @@ all.hydro = { get: function(){return false} }
 
 // should hide stack
 
+console.log();
 all.displayFailed();
 
 // passing tests

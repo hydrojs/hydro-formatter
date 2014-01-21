@@ -182,9 +182,6 @@ Formatter.prototype.displayFailed = function() {
     return;
   }
 
-  this.println('Failures:');
-  this.println();
-
   this.failed.forEach(function(test, i) {
     var err = test.error;
 
