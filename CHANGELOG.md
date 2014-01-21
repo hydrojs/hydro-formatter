@@ -1,4 +1,12 @@
 
+2.2.7 / 2014-01-21
+==================
+
+ * remove "Failures: " header
+ * add option to hide stacktraces
+ * only show error type if its unusual
+ * Improve error reporting
+
 2.2.6 / 2014-01-03
 ==================
 
