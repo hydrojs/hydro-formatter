@@ -4,6 +4,16 @@ var assert = require('assert');
 
 chai.Assertion.includeStack = true;
 
+function Test(title, error){
+  this.title = title;
+  this.error = error;
+  this.time = 1;
+}
+
+Test.prototype.fullTitle = function(){
+  return this.title;
+};
+
 // failures, passing, pending
 
 var all = new Formatter;
@@ -26,15 +36,15 @@ try {
 }
 
 all.failed = [
-  { time: 1, title: 'chai error', error: chaiErr },
-  { time: 1, title: 'assert error', error: assertErr },
-  { time: 1, title: 'no stack', error: errnoStack },
+  new Test('chai error', chaiErr),
+  new Test('assert error', assertErr),
+  new Test('no stack', errnoStack)
 ];
 
-all.skipped = [ { time: 1 } ];
-all.pending = [ { time: 1 } ];
+all.skipped = [ new Test ];
+all.pending = [ new Test ];
 
-all.tests = [ {time: 1 }]
+all.tests = [ new Test ]
   .concat(all.pending)
   .concat(all.skipped)
   .concat(all.failed);
@@ -52,7 +62,7 @@ all.displayFailed();
 // passing tests
 
 var passing = new Formatter;
-passing.tests = [ { time: 1 }, { time: 1 }, { time: 1 }, { time: 1 } ];
+passing.tests = [ new Test, new Test, new Test, new Test ];
 passing.displayResult();
 passing.displayFailed();
 

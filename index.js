@@ -185,7 +185,7 @@ Formatter.prototype.displayFailed = function() {
   this.failed.forEach(function(test, i) {
     var err = test.error;
 
-    this.println((i + 1) + ') ' + test.title);
+    this.println((i + 1) + ') ' + test.fullTitle());
     this.println();
 
     var type = err.constructor.name;
