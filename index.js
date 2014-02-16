@@ -178,10 +178,6 @@ Formatter.prototype.println = function(msg) {
  */
 
 Formatter.prototype.displayFailed = function() {
-  if (this.failed.length === 0) {
-    return;
-  }
-
   this.failed.forEach(function(test, i) {
     var err = test.error;
 
