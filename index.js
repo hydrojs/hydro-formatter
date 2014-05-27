@@ -2,13 +2,10 @@
  * External dependencies.
  */
 
-var path = require('path');
 var extend = require('super').extend;
-var ms = require('ms');
 var color = require('eyehurt');
 var inspect = require('loupe');
-var basename = path.basename;
-var extname = path.extname;
+var ms = require('ms');
 
 /**
  * Noop.
