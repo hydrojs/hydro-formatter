@@ -9,7 +9,7 @@
     "url": "https://github.com/hydrojs/hydro-formatter"
   },
   "dependencies": {
-    "ms": "~0.6.1",
+    "ms": "~2.1.2",
     "super": "~0.2.1",
     "eyehurt": "0.0.1",
     "loupe": "0.0.1"
